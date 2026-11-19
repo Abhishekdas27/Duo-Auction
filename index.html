@@ -69,15 +69,17 @@ button{border:0;border-radius:10px;padding:12px 16px;font-weight:800;font-size:1
   Create a Firebase project, enable Realtime Database, and set test rules
   while testing. See README.md for exact steps.
 */
+
 const firebaseConfig = {
-  apiKey: "PASTE_API_KEY",
-  authDomain: "PASTE_PROJECT.firebaseapp.com",
-  databaseURL: "https://PASTE_PROJECT-default-rtdb.firebaseio.com",
-  projectId: "PASTE_PROJECT",
-  storageBucket: "PASTE_PROJECT.appspot.com",
-  messagingSenderId: "PASTE_SENDER_ID",
-  appId: "PASTE_APP_ID"
+  apiKey: "AIzaSyBU0So3VrNF8JTzV62MwPLXbS-nZWZUcYw",
+  authDomain: "duo-action.firebaseapp.com",
+  databaseURL: "https://duo-action-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "duo-action",
+  storageBucket: "duo-action.firebasestorage.app",
+  messagingSenderId: "923721415551",
+  appId: "1:923721415551:web:7c3d7403a82054876f784a"
 };
+
 const firebaseReady = firebaseConfig.apiKey !== "PASTE_API_KEY";
 let db=null, roomRef=null, roomId=null, playerId=localStorage.getItem("duoAuctionPlayerId")||("p"+Math.random().toString(36).slice(2,10));
 localStorage.setItem("duoAuctionPlayerId",playerId);
