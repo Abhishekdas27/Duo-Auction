@@ -1,230 +1,58 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#10101b">
-<title>Duo Auction — Live Character Draft</title>
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Duo Auction</title>
 <style>
-:root{--bg:#0b0b13;--panel:#151522;--panel2:#1d1d2d;--line:#303047;--text:#f5f3ff;--muted:#aaa7c2;--pink:#ff4fa3;--cyan:#58d7e8;--gold:#ffc857;--green:#62e6a5;--red:#ff6b75}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 15% 0%,#292044 0,transparent 32%),radial-gradient(circle at 90% 20%,#12323c 0,transparent 28%),var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
-header{padding:22px clamp(16px,4vw,48px);display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #ffffff12;gap:12px;flex-wrap:wrap}
-.logo{font-weight:900;letter-spacing:.08em;font-size:18px}.logo span{color:var(--pink)}.status{font-size:12px;color:var(--muted)}
-main{max-width:1200px;margin:auto;padding:26px 18px 60px}.hero{text-align:center;margin:18px auto 28px}.eyebrow{color:var(--cyan);font-size:11px;letter-spacing:.2em;font-weight:800}.hero h1{font-size:clamp(30px,6vw,54px);line-height:1.03;margin:10px 0}.hero p{color:var(--muted);margin:0}
-.panel{background:linear-gradient(145deg,#1b1b2b,#12121d);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 18px 60px #0003}
-.setup{max-width:680px;margin:auto}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.field{display:flex;flex-direction:column;gap:7px}.field.full{grid-column:1/-1}label{font-size:12px;color:var(--muted);font-weight:700}input,select{width:100%;background:#0d0d17;border:1px solid var(--line);color:var(--text);padding:13px 14px;border-radius:10px;font:inherit;outline:none}input:focus,select:focus{border-color:var(--cyan)}
-button{border:0;border-radius:10px;padding:12px 16px;font-weight:800;font-size:13px;cursor:pointer;color:#100d19;background:linear-gradient(100deg,var(--pink),#ff9b75);transition:.15s}button:hover{filter:brightness(1.1);transform:translateY(-1px)}button:disabled{opacity:.4;cursor:not-allowed;transform:none}.secondary{background:#28283a;color:var(--text);border:1px solid var(--line)}.cyan{background:linear-gradient(100deg,var(--cyan),#8df0d0)}.danger{background:#48212b;color:#ffdce0;border:1px solid #813747}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.hint{font-size:12px;color:var(--muted);line-height:1.5;margin-top:12px}.hidden{display:none!important}
-.roomtop{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:16px}.roomcode{font-size:12px;color:var(--muted)}.roomcode strong{font-size:18px;color:var(--gold);letter-spacing:.14em;margin-left:8px}
-.players{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}.player{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:16px}.player.active{border-color:var(--pink);box-shadow:0 0 0 1px #ff4fa344}.player h3{margin:0 0 7px;font-size:14px}.money{font-size:25px;font-weight:900;color:var(--green)}.small{font-size:11px;color:var(--muted)}
-.auction{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(260px,.75fr);gap:16px}.lot{min-height:350px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;background:radial-gradient(circle at 50% 35%,#38304f,#171725 58%);text-align:center}.universe{display:inline-block;margin:auto auto 8px;padding:6px 10px;border:1px solid #ffffff2a;border-radius:99px;color:var(--cyan);font-size:11px;letter-spacing:.12em;text-transform:uppercase}.avatar{font-size:clamp(70px,12vw,110px);line-height:1.2;filter:drop-shadow(0 12px 24px #0008)}.charname{font-size:clamp(28px,4vw,42px);font-weight:950;margin:5px}.lot-bottom{margin-top:20px}.currentbid{font-size:13px;color:var(--muted)}.currentbid strong{display:block;font-size:36px;color:var(--gold);margin-top:3px}.bidder{color:var(--cyan);font-size:12px;margin-top:5px}
-.side{display:flex;flex-direction:column;gap:14px}.bidbox h3,.roster h3{margin:0 0 14px}.bidamount{font-size:30px;font-weight:900;text-align:center;margin:10px}.timer{font-size:12px;color:var(--muted);text-align:center}.bidbuttons{display:grid;grid-template-columns:1fr 1fr;gap:8px}.bidbuttons button{padding:13px 8px}.roster{max-height:260px;overflow:auto}.rosterrow{display:flex;justify-content:space-between;gap:8px;padding:9px 0;border-bottom:1px solid #ffffff12;font-size:12px}.rosterrow:last-child{border:0}.feed{margin-top:16px}.feed h3{font-size:13px;margin:0 0 10px}.feedline{font-size:11px;color:var(--muted);padding:6px 0;border-bottom:1px solid #ffffff0d}
-.notice{padding:11px 13px;border-radius:10px;background:#202033;color:var(--muted);font-size:12px;margin-top:12px}.notice.error{color:#ffb6bd;background:#3a1e29}.notice.good{color:#9cf1c5;background:#18352c}
-@media(max-width:760px){.auction{grid-template-columns:1fr}.players{gap:8px}.player{padding:12px}.money{font-size:20px}.grid{grid-template-columns:1fr}.field.full{grid-column:auto}.lot{min-height:300px}}
-</style>
-</head>
-<body>
-<header><div class="logo">DUO<span>AUCTION</span> ⚡</div><div class="status" id="connection">● Not connected</div></header>
-<main>
-<section class="hero"><div class="eyebrow">THE ULTIMATE 1v1 CHARACTER DRAFT</div><h1>Build your dream team.</h1><p>Two players. 10,000 coins each. One auction battlefield.</p></section>
-
-<section id="setup" class="panel setup">
-  <div class="grid">
-    <div class="field"><label for="playerName">YOUR PLAYER NAME</label><input id="playerName" maxlength="18" placeholder="e.g. Abhishek"></div>
-    <div class="field"><label for="roomCode">ROOM CODE (JOINING ONLY)</label><input id="roomCode" maxlength="8" placeholder="e.g. DUO7K" style="text-transform:uppercase"></div>
-    <div class="field full"><label>CHOOSE YOUR UNIVERSES</label>
-      <div style="display:flex;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:13px">
-        <label><input type="checkbox" class="universeCheck" value="Marvel" checked style="width:auto"> Marvel</label>
-        <label><input type="checkbox" class="universeCheck" value="Pokémon" checked style="width:auto"> Pokémon</label>
-        <label><input type="checkbox" class="universeCheck" value="JJK" checked style="width:auto"> JJK</label>
-      </div>
-    </div>
-  </div>
-  <div class="actions"><button id="createBtn">CREATE ROOM</button><button id="joinBtn" class="secondary">JOIN ROOM</button></div>
-  <div id="setupMsg" class="notice">Create a room and share its code with your girlfriend. She joins using that code.</div>
-  <p class="hint">Each room supports exactly two players. Both players must open this site on their own device. Live syncing requires Firebase setup (see README).</p>
-</section>
-
+:root{--bg:#0b0c16;--panel:#171a2a;--line:#343950;--pink:#ff579a;--cyan:#56d8e8;--gold:#ffd166;--green:#69e6a6;--txt:#f7f5ff;--muted:#aaaec4}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 20% 0,#292244,transparent 35%),var(--bg);color:var(--txt);font:15px system-ui}header,main{max-width:1150px;margin:auto;padding:20px}header{display:flex;justify-content:space-between;border-bottom:1px solid #ffffff18;font-weight:900;letter-spacing:2px}main{padding-top:28px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:16px}.hero{text-align:center;margin-bottom:24px}.hero h1{font-size:clamp(32px,6vw,56px);margin:8px}.muted,.hint{color:var(--muted)}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.field{display:grid;gap:6px;flex:1;min-width:180px}input,select{background:#0d1020;color:white;border:1px solid var(--line);padding:12px;border-radius:10px}button{background:linear-gradient(100deg,var(--pink),#ff9a78);border:0;border-radius:10px;padding:12px 16px;font-weight:800;cursor:pointer}button.alt{background:#292e44;color:white;border:1px solid var(--line)}button:disabled{opacity:.35;cursor:not-allowed}.hidden{display:none!important}.players{display:grid;grid-template-columns:1fr 1fr;gap:12px}.money{font-size:25px;color:var(--green);font-weight:900}.auction{display:grid;grid-template-columns:1.2fr .8fr;gap:14px}.feature{text-align:center;min-height:360px;display:grid;place-items:center;background:radial-gradient(circle,#39334e,#171a2a 70%)}.art{height:230px;width:min(90%,280px);object-fit:contain;filter:drop-shadow(0 10px 22px #0009)}.name{font-size:30px;font-weight:900}.small{font-size:12px;color:var(--muted)}.bid{font-size:34px;color:var(--gold);font-weight:900}.rosteritem{display:flex;align-items:center;gap:8px;border-bottom:1px solid #ffffff15;padding:6px 0}.thumb{width:48px;height:48px;object-fit:contain}.rosteritem span{flex:1}.teams{display:grid;grid-template-columns:1fr 1fr;gap:12px}.health{height:12px;background:#33394c;border-radius:20px;overflow:hidden}.health>i{display:block;height:100%;background:var(--green);width:100%}.battlelog{max-height:260px;overflow:auto;line-height:1.8}.notice{padding:10px;background:#252a40;border-radius:10px;margin-top:10px;color:var(--muted)}.winner{text-align:center;color:var(--gold);font-size:34px;font-weight:950}@media(max-width:720px){.auction{grid-template-columns:1fr}.players,.teams{grid-template-columns:1fr}.feature{min-height:300px}}
+</style></head><body>
+<header><div>DUO AUCTION ⚡</div><div id="connection" class="small">Not connected</div></header><main>
+<div class="hero"><div class="small">TWO PLAYERS · LIVE AUCTION · FINAL BATTLE</div><h1>Build your dream team.</h1><div class="muted">10,000 coins each · 5 characters each · one final swap</div></div>
+<section id="setup" class="panel"><div class="row"><label class="field">Your name<input id="playerName" placeholder="Your name" maxlength="18"></label><label class="field">Universe<select id="universe"><option>Pokémon</option><option>JJK</option><option>Avengers</option></select></label><label class="field">Room code (join)<input id="roomCode" placeholder="e.g. A1B2C"></label></div><div class="row" style="margin-top:14px"><button id="create">Create room</button><button id="join" class="alt">Join room</button></div><div id="setupMsg" class="notice">Create a room, then share its code with the second player.</div></section>
 <section id="game" class="hidden">
-  <div class="roomtop"><div class="roomcode">ROOM CODE <strong id="roomLabel">—</strong></div><div class="actions" style="margin:0"><button id="copyBtn" class="secondary">COPY ROOM CODE</button><button id="leaveBtn" class="danger">LEAVE ROOM</button></div></div>
-  <div class="players" id="players"></div>
-  <div class="auction">
-    <div class="panel lot">
-      <div><div class="eyebrow">NOW UP FOR AUCTION</div><div class="universe" id="lotUniverse">WAITING</div><div class="avatar" id="lotEmoji">⚔️</div><div class="charname" id="lotName">Waiting for auction</div><div class="small" id="lotMeta">The host can start the first lot.</div></div>
-      <div class="lot-bottom"><div class="currentbid">CURRENT BID<strong id="currentBid">0</strong><div class="bidder" id="currentBidder">No bids yet</div></div></div>
-    </div>
-    <div class="side">
-      <div class="panel bidbox"><h3>⚡ PLACE YOUR BID</h3><div class="timer" id="timer">Auction is waiting</div><div class="bidamount" id="nextBid">—</div><div class="bidbuttons"><button id="bid500" class="cyan">+500</button><button id="bid1000">+1,000</button></div><div class="actions"><button id="passBtn" class="secondary" style="flex:1">PASS / NO BID</button></div><div id="gameMsg" class="notice">Waiting for players…</div></div>
-      <div class="panel"><h3 style="margin:0 0 12px">🎮 AUCTION CONTROL</h3><div class="actions" style="margin:0"><button id="startBtn" class="cyan">START AUCTION</button><button id="sellBtn">SOLD!</button><button id="unsoldBtn" class="secondary">UNSOLD</button><button id="nextBtn" class="secondary">NEXT CHARACTER</button></div><p class="hint">The room creator controls the auction flow. Bids are open to both players.</p></div>
-      <div class="panel roster"><h3>🏆 YOUR SQUADS</h3><div id="rosters"></div></div>
-    </div>
-  </div>
-  <div class="panel feed"><h3>📜 AUCTION ACTIVITY</h3><div id="feed"><div class="feedline">The auction log will appear here.</div></div></div>
-</section>
-</main>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
-<script>
-/*
-  REQUIRED: Paste your Firebase web app config below.
-  Create a Firebase project, enable Realtime Database, and set test rules
-  while testing. See README.md for exact steps.
-*/
-const firebaseConfig = {
-  apiKey: "AIzaSyBU0So3VrNF8JTzV62MwPLXbS-nZWZUcYw",
-  authDomain: "duo-action.firebaseapp.com",
-  databaseURL: "https://duo-action-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "duo-action",
-  storageBucket: "duo-action.firebasestorage.app",
-  messagingSenderId: "923721415551",
-  appId: "1:923721415551:web:7c3d7403a82054876f784a"
+<div class="row panel" style="justify-content:space-between"><b>ROOM <span id="roomLabel" style="color:var(--gold)"></span></b><button id="copy" class="alt">Copy code</button></div>
+<div id="players" class="players"></div>
+<div class="auction"><div class="panel feature"><div><div id="phase" class="small">LOBBY</div><img id="lotImg" class="art hidden"><div id="lotEmoji" style="font-size:100px">⚔️</div><div id="lotName" class="name">Waiting for second player</div><div id="lotPower" class="muted"></div><div class="small" id="lotCount"></div></div><div>Current bid <div id="bid" class="bid">0</div><div id="bidder" class="small">No bids yet</div></div></div>
+<div><div class="panel"><h3>Bid controls</h3><div id="timer" class="muted">Waiting for host</div><div class="row"><button id="bid500">+500</button><button id="bid1000" class="alt">+1,000</button><button id="pass" class="alt">Pass</button></div><div class="notice" id="gameMsg">Both players must join before the host starts.</div></div>
+<div class="panel"><h3>Host controls</h3><div class="row"><button id="start">Start / Next lot</button><button id="sell">Sell lot</button><button id="unsold" class="alt">No sale</button></div><div class="small">12 characters in the pool. Auction stops when both teams have 5.</div></div></div></div>
+<div class="panel"><h3>Your squads</h3><div id="squads" class="teams"></div></div>
+<div class="panel"><h3>Final team swap</h3><div class="row"><label class="field">Replace from your team<select id="swapOut"></select></label><label class="field">Choose an unselected character<select id="swapIn"></select></label><button id="swap">Use swap</button></div><div class="row" style="margin-top:10px"><button id="confirm" class="alt">Confirm final team</button><button id="battle" disabled>Start battle</button></div><div id="confirmMsg" class="notice">Each player gets one swap, then both confirm.</div></div>
+<div class="panel hidden" id="battlePanel"><h2>⚔️ FINAL BATTLE</h2><div id="battleTeams" class="teams"></div><div id="winner" class="winner"></div><div id="battleLog" class="battlelog"></div><button id="replay" class="alt">Replay battle</button></div>
+<div class="panel"><h3>Activity</h3><div id="log" class="small"></div></div></section></main>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>
+const firebaseConfig={apiKey:"AIzaSyBU0So3VrNF8JTzV62MwPLXbS-nZWZUcYw",authDomain:"duo-action.firebaseapp.com",databaseURL:"https://duo-action-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"duo-action",storageBucket:"duo-action.firebasestorage.app",messagingSenderId:"923721415551",appId:"1:923721415551:web:7c3d7403a82054876f784a"};
+firebase.initializeApp(firebaseConfig);const db=firebase.database();
+const $=id=>document.getElementById(id), playerId=localStorage.duoAuctionPid||(localStorage.duoAuctionPid="p"+Math.random().toString(36).slice(2));
+let roomRef=null,roomId="",isHost=false,state=null,unsub=null,timer=null;
+const data={
+"Pokémon":[["Pikachu",25,"Electric"],["Charizard",6,"Fire / Flying"],["Mewtwo",150,"Psychic"],["Lucario",448,"Aura"],["Gengar",94,"Ghost"],["Greninja",658,"Water / Dark"],["Rayquaza",384,"Dragon"],["Eevee",133,"Evolution"],["Dragonite",149,"Dragon"],["Garchomp",445,"Dragon / Ground"],["Arcanine",59,"Fire"],["Snorlax",143,"Tank"]],
+"JJK":[["Satoru Gojo",null,"Limitless"],["Ryomen Sukuna",null,"King of Curses"],["Yuji Itadori",null,"Divergent Fist"],["Megumi Fushiguro",null,"Ten Shadows"],["Yuta Okkotsu",null,"Special Grade"],["Toji Fushiguro",null,"Heavenly Restriction"],["Maki Zenin",null,"Cursed Tool Mastery"],["Kento Nanami",null,"Ratio Technique"],["Nobara Kugisaki",null,"Straw Doll"],["Aoi Todo",null,"Boogie Woogie"],["Mahito",null,"Idle Transfiguration"],["Suguru Geto",null,"Cursed Spirit Manipulation"]],
+"Avengers":[["Iron Man",null,"Powered Armor"],["Captain America",null,"Super Soldier"],["Thor",null,"God of Thunder"],["Hulk",null,"Gamma Strength"],["Black Widow",null,"Espionage"],["Hawkeye",null,"Master Archer"],["Scarlet Witch",null,"Chaos Magic"],["Doctor Strange",null,"Mystic Arts"],["Black Panther",null,"Vibranium Suit"],["Spider-Man",null,"Spider-Sense"],["Ant-Man",null,"Size Manipulation"],["Captain Marvel",null,"Cosmic Energy"]]
 };
-const firebaseReady = true;
-let db=null, roomRef=null, roomId=null, playerId=localStorage.getItem("duoAuctionPlayerId")||("p"+Math.random().toString(36).slice(2,10));
-localStorage.setItem("duoAuctionPlayerId",playerId);
-let state=null, isHost=false, unsub=null, timerInterval=null;
-const $=id=>document.getElementById(id);
-const characters=[
- {name:"Iron Man",u:"Marvel",e:"🦾",power:"Genius • Tech"},
- {name:"Thor",u:"Marvel",e:"⚡",power:"Thunder • Asgard"},
- {name:"Doctor Strange",u:"Marvel",e:"🌀",power:"Sorcerer Supreme"},
- {name:"Spider-Man",u:"Marvel",e:"🕷️",power:"Friendly Neighbourhood"},
- {name:"Thanos",u:"Marvel",e:"💜",power:"Mad Titan"},
- {name:"Captain America",u:"Marvel",e:"🛡️",power:"Super Soldier"},
- {name:"Hulk",u:"Marvel",e:"💚",power:"Gamma Power"},
- {name:"Scarlet Witch",u:"Marvel",e:"🔮",power:"Chaos Magic"},
- {name:"Charizard",u:"Pokémon",e:"🔥",power:"Fire • Flying"},
- {name:"Pikachu",u:"Pokémon",e:"⚡",power:"Electric"},
- {name:"Mewtwo",u:"Pokémon",e:"🧬",power:"Psychic"},
- {name:"Lucario",u:"Pokémon",e:"🥊",power:"Aura"},
- {name:"Gengar",u:"Pokémon",e:"👻",power:"Ghost • Poison"},
- {name:"Greninja",u:"Pokémon",e:"💧",power:"Water • Dark"},
- {name:"Rayquaza",u:"Pokémon",e:"🐉",power:"Dragon • Flying"},
- {name:"Eevee",u:"Pokémon",e:"🦊",power:"Evolution"},
- {name:"Gojo Satoru",u:"JJK",e:"🌀",power:"Limitless • Six Eyes"},
- {name:"Ryomen Sukuna",u:"JJK",e:"👹",power:"King of Curses"},
- {name:"Yuta Okkotsu",u:"JJK",e:"⚔️",power:"Special Grade"},
- {name:"Toji Fushiguro",u:"JJK",e:"🥷",power:"Sorcerer Killer"},
- {name:"Yuji Itadori",u:"JJK",e:"👊",power:"Divergent Fist"},
- {name:"Megumi Fushiguro",u:"JJK",e:"🐺",power:"Ten Shadows"},
- {name:"Maki Zenin",u:"JJK",e:"🗡️",power:"Heavenly Restriction"},
- {name:"Kento Nanami",u:"JJK",e:"⌚",power:"Ratio Technique"}
-];
-function msg(text,type=""){ $("setupMsg").textContent=text;$("setupMsg").className="notice "+type; }
-function gameMsg(text,type=""){ $("gameMsg").textContent=text;$("gameMsg").className="notice "+type; }
-function initFirebase(){if(!firebaseReady){msg("Firebase isn't configured yet. Follow README.md, paste your Firebase config into index.html, then publish again.","error");return false;}if(!db){firebase.initializeApp(firebaseConfig);db=firebase.database();$("connection").textContent="● Firebase ready";}return true;}
-function code(){return Math.random().toString(36).slice(2,7).toUpperCase();}
-function selectedUniverses(){return [...document.querySelectorAll(".universeCheck:checked")].map(x=>x.value);}
-function shuffled(arr){return arr.map(x=>[Math.random(),x]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);}
-function createRoom(){
- if(!initFirebase())return;
- const name=$("playerName").value.trim();if(!name){msg("Enter your player name first.","error");return;}
- const chosen=selectedUniverses();if(!chosen.length){msg("Choose at least one universe.","error");return;}
- const id=code(), pool=shuffled(characters.filter(c=>chosen.includes(c.u)));
- const initial={host:playerId,players:{[playerId]:{name,budget:10000,spent:0,team:[],joinedAt:Date.now()}},pool,lotIndex:-1,lot:null,currentBid:0,currentBidder:null,status:"lobby",endsAt:0,log:[{text:name+" created the room.",at:Date.now()}]};
- db.ref("rooms/"+id).set(initial).then(()=>enterRoom(id,true)).catch(e=>msg("Could not create room: "+e.message+" — check Firebase Realtime Database rules and databaseURL.","error"));
-}
-function joinRoom(){
- if(!initFirebase())return;
- const name=$("playerName").value.trim(),id=$("roomCode").value.trim().toUpperCase();
- if(!name||!id){msg("Enter your name and the room code.","error");return;}
- const ref=db.ref("rooms/"+id);
- ref.once("value").then(s=>{
-  if(!s.exists()){msg("Room not found. Check the code.","error");return;}
-  const r=s.val(), players=r.players||{};
-  if(players[playerId]){enterRoom(id,r.host===playerId);return;}
-  if(Object.keys(players).length>=2){msg("This room already has two players.","error");return;}
-  ref.child("players/"+playerId).set({name,budget:10000,spent:0,team:[],joinedAt:Date.now()})
-   .then(()=>ref.child("log").transaction(a=>{a=a||[];a.push({text:name+" joined the room.",at:Date.now()});return a.slice(-30)}))
-   .then(()=>enterRoom(id,false))
-   .catch(e=>msg("Could not join room: "+e.message+" — check Firebase Realtime Database rules.","error"));
- }).catch(e=>msg("Could not read room: "+e.message+" — check Firebase Realtime Database rules and databaseURL.","error"));
-}
-function enterRoom(id,host){
- roomId=id;isHost=host;roomRef=db.ref("rooms/"+id);
- $("setup").classList.add("hidden");$("game").classList.remove("hidden");$("roomLabel").textContent=id;
- if(unsub)roomRef.off("value",unsub);
- unsub=s=>{if(!s.exists()){gameMsg("Room no longer exists.","error");return;}state=s.val();render();};
- roomRef.on("value",unsub);
-}
-function update(patch){if(!roomRef)return;return roomRef.update(patch).catch(e=>gameMsg(e.message,"error"));}
-function addLog(text){roomRef.child("log").transaction(a=>{a=a||[];a.push({text,at:Date.now()});return a.slice(-35)});}
-function startAuction(){
- if(!isHost||!state)return;
- if(Object.keys(state.players||{}).length<2){gameMsg("Waiting for the second player to join.","error");return;}
- const idx=state.lotIndex+1;if(idx>=state.pool.length){update({status:"finished",lot:null});addLog("Auction completed!");return;}
- const lot=state.pool[idx];
- update({lotIndex:idx,lot,status:"active",currentBid:0,currentBidder:null,endsAt:0});
- addLog("Up for auction: "+lot.name+" ("+lot.u+").");
-}
-function placeBid(increment){
- if(!state||state.status!=="active"||!state.lot)return;
- const player=state.players[playerId];if(!player){gameMsg("You are not in this room.","error");return;}
- const bid=(state.currentBid||0)+increment;
- if(bid>player.budget){gameMsg("Not enough coins for that bid.","error");return;}
- if(state.currentBidder===playerId){gameMsg("You're already the highest bidder.","error");return;}
- const updates={currentBid:bid,currentBidder:playerId,endsAt:Date.now()+12000};
- update(updates);addLog(player.name+" bid "+bid.toLocaleString()+" coins on "+state.lot.name+".");
- gameMsg("You're the highest bidder!","good");
-}
-function pass(){if(state?.status==="active")gameMsg("You passed on this bid. You can still bid before the timer ends.");}
-function closeLot(sold){
- if(!isHost||!state?.lot||state.status!=="active")return;
- if(sold&&!state.currentBidder){gameMsg("No bids yet. Mark this character unsold or wait for a bid.","error");return;}
- const updates={status:"closed",endsAt:0};
- if(sold){
-  const pid=state.currentBidder,pl=state.players[pid];
-  if(!pl||state.currentBid>pl.budget){gameMsg("Bidder budget changed; cannot complete sale.","error");return;}
-  updates["players/"+pid+"/budget"]=pl.budget-state.currentBid;
-  updates["players/"+pid+"/spent"]=(pl.spent||0)+state.currentBid;
-  updates["players/"+pid+"/team"]=[...(pl.team||[]),{...state.lot,price:state.currentBid}];
-  addLog(state.lot.name+" SOLD to "+pl.name+" for "+state.currentBid.toLocaleString()+" coins!");
- }else addLog(state.lot.name+" went UNSOLD.");
- update(updates);
-}
-function render(){
- if(!state)return;
- const players=state.players||{},ids=Object.keys(players);
- $("players").innerHTML=ids.map(id=>{let p=players[id];return `<div class="player ${id===state.currentBidder?"active":""}"><h3>${esc(p.name)} ${id===playerId?"(YOU)":""}</h3><div class="money">${(p.budget||0).toLocaleString()} <span class="small">coins left</span></div><div class="small">Squad: ${(p.team||[]).length} • Spent: ${(p.spent||0).toLocaleString()}</div></div>`}).join("");
- const lot=state.lot;
- $("lotUniverse").textContent=lot?lot.u.toUpperCase():"AUCTION STATUS";
- $("lotEmoji").textContent=lot?lot.e:(state.status==="finished"?"🏆":"⚔️");
- $("lotName").textContent=lot?lot.name:(state.status==="finished"?"Auction completed!":"Waiting for auction");
- $("lotMeta").textContent=lot?lot.power:(state.status==="finished"?"Check the final squads below.":"The host can start the first lot.");
- $("currentBid").textContent=(state.currentBid||0).toLocaleString();
- $("currentBidder").textContent=state.currentBidder?(players[state.currentBidder]?.name||"Player")+" is highest bidder":"No bids yet";
- const me=players[playerId],min=(state.currentBid||0)+500;
- $("nextBid").textContent=state.status==="active"?"Next bid: "+min.toLocaleString():"—";
- $("bid500").disabled=state.status!=="active"||!me||min>me.budget||state.currentBidder===playerId;
- $("bid1000").disabled=state.status!=="active"||!me||((state.currentBid||0)+1000)>me.budget||state.currentBidder===playerId;
- $("passBtn").disabled=state.status!=="active";
- $("startBtn").disabled=!isHost||!(state.status==="lobby"||state.status==="closed"||state.status==="finished");
- $("sellBtn").disabled=!isHost||state.status!=="active";
- $("unsoldBtn").disabled=!isHost||state.status!=="active";
- $("nextBtn").disabled=!isHost||state.status!=="closed";
- ["startBtn","sellBtn","unsoldBtn","nextBtn"].forEach(id=>$(id).classList.toggle("hidden",!isHost));
- $("gameMsg").textContent=state.status==="lobby"?"Waiting for host to start.":state.status==="finished"?"All characters have been auctioned.":state.status==="closed"?"Lot closed. Host can move to the next character.":state.currentBidder?"Bidding is live. Highest bidder: "+(players[state.currentBidder]?.name||"Player"):"Bidding is live. Opening bid is 500 coins.";
- $("rosters").innerHTML=ids.map(id=>`<div style="margin-bottom:14px"><div class="small" style="font-weight:800;color:var(--cyan);margin-bottom:5px">${esc(players[id].name)}'S TEAM</div>${(players[id].team||[]).length?(players[id].team||[]).map(c=>`<div class="rosterrow"><span>${c.e} ${esc(c.name)}</span><b>${c.price.toLocaleString()}</b></div>`).join(""):'<div class="small">No characters bought yet.</div>'}</div>`).join("");
- const logs=(state.log||[]).slice().reverse();
- $("feed").innerHTML=logs.map(x=>`<div class="feedline">${esc(x.text)}</div>`).join("")||'<div class="feedline">No activity yet.</div>';
- $("connection").textContent="● Live room connected";
-}
+const wikiTitles={"Satoru Gojo":"Satoru_Gojo","Ryomen Sukuna":"Ryomen_Sukuna","Yuji Itadori":"Yuji_Itadori","Megumi Fushiguro":"Megumi_Fushiguro","Yuta Okkotsu":"Yuta_Okkotsu","Toji Fushiguro":"Toji_Fushiguro","Maki Zenin":"Maki_Zenin","Kento Nanami":"Kento_Nanami","Nobara Kugisaki":"Nobara_Kugisaki","Aoi Todo":"Aoi_Todo","Mahito":"Mahito_(Jujutsu_Kaisen)","Suguru Geto":"Suguru_Geto","Iron Man":"Iron_Man","Captain America":"Captain_America","Thor":"Thor_(Marvel_Comics)","Hulk":"Hulk_(character)","Black Widow":"Black_Widow_(Natasha_Romanova)","Hawkeye":"Hawkeye_(Clint_Barton)","Scarlet Witch":"Scarlet_Witch","Doctor Strange":"Doctor_Strange","Black Panther":"Black_Panther_(character)","Spider-Man":"Spider-Man","Ant-Man":"Ant-Man","Captain Marvel":"Carol_Danvers"};
+const imgCache={};
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
-function tick(){
- clearInterval(timerInterval);
- timerInterval=setInterval(()=>{
-  if(!state||state.status!=="active"||!state.endsAt){$("timer").textContent=state?.status==="active"?"No countdown — host controls the sale":"Auction is waiting";return;}
-  const left=Math.max(0,Math.ceil((state.endsAt-Date.now())/1000));
-  $("timer").textContent="Bid timer: "+left+"s";
-  if(left===0&&isHost&&state.status==="active")closeLot(true);
- },300);
+async function imageFor(c){if(imgCache[c.name])return imgCache[c.name];let url="";if(c.universe==="Pokémon"&&c.dex)url=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${c.dex}.png`;else{let title=wikiTitles[c.name]||c.name.replaceAll(" ","_");try{let r=await fetch("https://en.wikipedia.org/api/rest_v1/page/summary/"+encodeURIComponent(title));if(r.ok){let j=await r.json();url=j.thumbnail?.source||j.originalimage?.source||""}}catch(e){}}
+imgCache[c.name]=url;return url;}
+function image(c,cls="art"){return `<img class="${cls}" data-character="${esc(c.name)}" alt="${esc(c.name)}" src="${c.img||imgCache[c.name]||""}" onerror="this.style.display='none'">`;}
+async function refreshImages(root=document){
+ const imgs=[...root.querySelectorAll("img[data-character]")];
+ for(const im of imgs){const c=findCharacter(im.dataset.character);if(!c)continue;const url=await imageFor(c);if(url&&im.isConnected){im.src=url;im.style.display="";}}
 }
-$("createBtn").onclick=createRoom;$("joinBtn").onclick=joinRoom;
-$("bid500").onclick=()=>placeBid(500);$("bid1000").onclick=()=>placeBid(1000);$("passBtn").onclick=pass;
-$("startBtn").onclick=startAuction;$("sellBtn").onclick=()=>closeLot(true);$("unsoldBtn").onclick=()=>closeLot(false);$("nextBtn").onclick=startAuction;
-$("copyBtn").onclick=()=>navigator.clipboard.writeText(roomId).then(()=>gameMsg("Room code copied: "+roomId,"good"));
-$("leaveBtn").onclick=()=>{if(roomRef&&unsub)roomRef.off("value",unsub);roomRef=null;roomId=null;state=null;$("game").classList.add("hidden");$("setup").classList.remove("hidden");};
-$("roomCode").addEventListener("input",e=>e.target.value=e.target.value.toUpperCase());
-setInterval(tick,1000);
-</script>
-</body>
-</html>
+function findCharacter(name){return (state?.pool||[]).find(c=>c.name===name)||Object.values(state?.players||{}).flatMap(p=>p.team||[]).find(c=>c.name===name)||null;}
+function log(t){roomRef.child("log").transaction(a=>{a=a||[];a.unshift(t);return a.slice(0,35)});}
+function msg(t){$("setupMsg").textContent=t}
+function enter(id,host){roomId=id;isHost=host;roomRef=db.ref("rooms/"+id);$("setup").classList.add("hidden");$("game").classList.remove("hidden");$("roomLabel").textContent=id;if(unsub)roomRef.off("value",unsub);unsub=s=>{state=s.val();render()};roomRef.on("value",unsub);$("connection").textContent="● Live Firebase";}
+function makePool(universe){return data[universe].map((x,i)=>({name:x[0],dex:x[1],power:x[2],universe,base:Math.round(75+(i*17)%35),img:""})).sort(()=>Math.random()-.5);}
+$("create").onclick=async()=>{let name=$("playerName").value.trim(),universe=$("universe").value;if(!name)return msg("Enter your name.");let id=Math.random().toString(36).slice(2,7).toUpperCase(),pool=makePool(universe);await db.ref("rooms/"+id).set({host:playerId,universe,players:{[playerId]:{name,budget:10000,team:[],swapped:false,confirmed:false}},pool,index:-1,lot:null,bid:0,bidder:null,endsAt:0,status:"lobby",log:[name+" created the room."]});enter(id,true)};
+$("join").onclick=async()=>{let name=$("playerName").value.trim(),id=$("roomCode").value.trim().toUpperCase();if(!name||!id)return msg("Enter your name and room code.");let ref=db.ref("rooms/"+id),s=await ref.once("value");if(!s.exists())return msg("Room not found.");let r=s.val(),ps=r.players||{};if(!ps[playerId]&&Object.keys(ps).length>=2)return msg("Room is full.");if(!ps[playerId])await ref.child("players/"+playerId).set({name,budget:10000,team:[],swapped:false,confirmed:false});enter(id,r.host===playerId)};
+async function patch(x){await roomRef.update(x)}
+async function startLot(){if(!isHost||Object.keys(state.players).length!==2)return gameMessage("Waiting for both players.");let ps=state.players;if(Object.values(ps).every(p=>(p.team||[]).length>=5)){await patch({status:"swap",lot:null});return}let idx=state.index+1;while(idx<state.pool.length&&state.pool[idx].taken)idx++;if(idx>=state.pool.length){let pool=state.pool.slice(),players=JSON.parse(JSON.stringify(ps)),ids=Object.keys(players);while(ids.some(id=>players[id].team.length<5)){let id=ids.sort((a,b)=>players[a].team.length-players[b].team.length)[0];let owned=new Set(ids.flatMap(pid=>players[pid].team.map(c=>c.name)));let c=pool.find(x=>!owned.has(x.name));if(!c)break;players[id].team.push({...c,price:0});}if(ids.some(id=>players[id].team.length!==5))return gameMessage("Could not fill both teams. Please reset and create a new room.");await patch({players,status:"swap",pool,lot:null});return}await patch({index:idx,lot:state.pool[idx],bid:0,bidder:null,endsAt:0,status:"active"});log("Up for auction: "+state.pool[idx].name)}
+function gameMessage(t){$("gameMsg").textContent=t}
+async function bid(inc){if(state.status!=="active")return;let p=state.players[playerId],v=(state.bid||0)+inc;if(!p||p.team.length>=5||v>p.budget||state.bidder===playerId)return gameMessage("Bid unavailable: check your balance or highest-bid status.");await patch({bid:v,bidder:playerId,endsAt:Date.now()+12000});log(p.name+" bid "+v+" for "+state.lot.name)}
+async function closeLot(sold){if(!isHost||state.status!=="active")return;let pool=state.pool.slice(),players=JSON.parse(JSON.stringify(state.players));if(sold&&state.bidder){let p=players[state.bidder];if(!p||p.team.length>=5||state.bid>p.budget)return; p.budget-=state.bid;p.team.push({...state.lot,price:state.bid});pool[state.index].taken=true;log(state.lot.name+" sold to "+p.name)}else{pool[state.index].taken=true;log(state.lot.name+" went unsold")}await patch({players,pool,status:"closed",lot:null,endsAt:0})}
+function render(){if(!state)return;let ids=Object.keys(state.players||{});$("players").innerHTML=ids.map(id=>{let p=state.players[id];return `<div class="panel"><b>${esc(p.name)} ${id===playerId?"(YOU)":""}</b><div class="money">${p.budget.toLocaleString()} coins</div><div class="small">${p.team.length}/5 characters</div></div>`}).join("");let lot=state.lot;$("phase").textContent=state.status.toUpperCase();$("lotName").textContent=lot?.name||(state.status==="battle"?"Battle complete":state.status==="swap"?"Final team selection":"Waiting for auction");$("lotPower").textContent=lot?.power||state.universe;$("bid").textContent=(state.bid||0).toLocaleString();$("bidder").textContent=state.bidder?state.players[state.bidder]?.name+" is leading":"No bids";$("lotCount").textContent="Character "+(state.index+1)+" of 12";$("lotEmoji").classList.toggle("hidden",!!lot);$("lotImg").classList.toggle("hidden",!lot);if(lot){imageFor(lot).then(url=>{if($("lotName").textContent===lot.name){$("lotImg").src=url;$("lotImg").alt=lot.name}})}$("bid500").disabled=state.status!=="active"||!state.players[playerId]||(state.bid+500)>state.players[playerId].budget||state.bidder===playerId;$("bid1000").disabled=state.status!=="active"||!state.players[playerId]||(state.bid+1000)>state.players[playerId].budget||state.bidder===playerId;$("start").disabled=!isHost||!["lobby","closed"].includes(state.status);$("sell").disabled=!isHost||state.status!=="active";$("unsold").disabled=!isHost||state.status!=="active";$("squads").innerHTML=ids.map(id=>`<div><b>${esc(state.players[id].name)}'S TEAM</b>${(state.players[id].team||[]).map(c=>`<div class="rosteritem">${image(c,"thumb")}<span>${esc(c.name)}</span><b>${c.price}</b></div>`).join("")}</div>`).join("");$("log").innerHTML=(state.log||[]).map(x=>esc(x)).join("<br>");refreshImages($("squads"));let pool=state.pool||[],me=state.players[playerId];$("swapOut").innerHTML=(me?.team||[]).map((c,i)=>`<option value="${i}">${esc(c.name)}</option>`).join("");$("swapIn").innerHTML=pool.filter(c=>!c.taken).map(c=>`<option value="${esc(c.name)}">${esc(c.name)}</option>`).join("");$("swap").disabled=state.status!=="swap"||!me||me.swapped||!me.team.length||!pool.some(c=>!c.taken);$("confirm").disabled=state.status!=="swap"||!me||me.confirmed;$("battle").disabled=state.status!=="swap"||ids.some(id=>!state.players[id].confirmed)||!isHost;if(state.status==="swap")gameMessage("Both teams have 5. Use your one swap, then confirm.");if(state.status==="battle")renderBattle();}
+async function renderTeamsBattle(){let ids=Object.keys(state.players),html="";for(let id of ids){let p=state.players[id];html+=`<div class="panel"><h3>${esc(p.name)}</h3>${p.team.map(c=>`<div class="rosteritem">${image(c,"thumb")}<span>${esc(c.name)}</span></div>`).join("")}</div>`}return html}
+async function battleRun(){let ids=Object.keys(state.players),teams=ids.map(id=>({id,name:state.players[id].name,chars:state.players[id].team.map(c=>({...c,hp:100}))})),turn=0,logs=[];while(teams[0].chars.some(c=>c.hp>0)&&teams[1].chars.some(c=>c.hp>0)&&turn<60){let a=teams[turn%2],b=teams[(turn+1)%2],att=a.chars.find(c=>c.hp>0),def=b.chars.find(c=>c.hp>0);if(!att||!def)break;let damage=Math.max(8,Math.round(att.base*(.22+Math.random()*.22)));def.hp=Math.max(0,def.hp-damage);logs.push(`${att.name} (${a.name}) attacks ${def.name} for ${damage} damage. ${def.hp===0?"KNOCKOUT!":def.hp+" HP left."}`);turn++}let score=teams.map(t=>t.chars.reduce((n,c)=>n+c.hp,0)),winner=score[0]===score[1]?"Draw":score[0]>score[1]?teams[0].name:teams[1].name;await patch({status:"battle",battle:{teams,logs,winner,score}})}
+function renderBattle(){let b=state.battle;if(!b)return;$("battlePanel").classList.remove("hidden");$("winner").textContent=b.winner==="Draw"?"IT'S A DRAW!":b.winner+" WINS!";$("battleTeams").innerHTML=b.teams.map(t=>`<div class="panel"><h3>${esc(t.name)} · ${b.score[t===b.teams[0]?0:1]} HP remaining</h3>${t.chars.map(c=>`<div class="rosteritem">${image(c,"thumb")}<span>${esc(c.name)}<div class="health"><i style="width:${c.hp}%"></i></div></span><b>${c.hp} HP</b></div>`).join("")}</div>`).join("");$("battleLog").innerHTML=b.logs.map(x=>esc(x)).join("<br>");refreshImages($("battlePanel"))}
+$("start").onclick=startLot;$("bid500").onclick=()=>bid(500);$("bid1000").onclick=()=>bid(1000);$("pass").onclick=()=>gameMessage("Passed. You can still bid before the lot closes.");$("sell").onclick=()=>closeLot(true);$("unsold").onclick=()=>closeLot(false);$("swap").onclick=async()=>{let me=state.players[playerId],out=+$("swapOut").value,inName=$("swapIn").value,players=JSON.parse(JSON.stringify(state.players)),pool=state.pool.slice(),old=players[playerId].team[out],next=pool.find(c=>c.name===inName&&!c.taken);if(!next||me.swapped)return;next.taken=true;pool[pool.findIndex(c=>c.name===inName)]={...pool[pool.findIndex(c=>c.name===inName)],taken:true};pool.push({...old,taken:false});players[playerId].team[out]={...next,price:old.price};players[playerId].swapped=true;players[playerId].confirmed=false;await patch({players,pool})};$("confirm").onclick=async()=>{let players=JSON.parse(JSON.stringify(state.players));players[playerId].confirmed=true;await patch({players})};$("battle").onclick=battleRun;$("replay").onclick=battleRun;$("copy").onclick=()=>navigator.clipboard.writeText(roomId);$("roomCode").addEventListener("input",e=>e.target.value=e.target.value.toUpperCase());
+setInterval(()=>{if(state?.status==="active"&&state.endsAt){let left=Math.max(0,Math.ceil((state.endsAt-Date.now())/1000));$("timer").textContent="Bid timer: "+left+"s";if(left===0&&isHost)closeLot(true)}},500);
+</script></body></html>
